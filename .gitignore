@@ -129,6 +129,7 @@ venv/
 ENV/
 env.bak/
 venv.bak/
+.conda/
 
 # Spyder project settings
 .spyderproject
@@ -144,6 +145,9 @@ venv.bak/
 .mypy_cache/
 .dmypy.json
 dmypy.json
+
+# ruff
+.ruff_cache/
 
 # Pyre type checker
 .pyre/
