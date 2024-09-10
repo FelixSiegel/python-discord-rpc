@@ -5,4 +5,4 @@
 [![Linting: Ruff](https://img.shields.io/endpoint?url=https://raw.githubusercontent.com/charliermarsh/ruff/main/assets/badge/v2.json)](https://github.com/astral-sh/ruff)
 ![mypy-linting](https://github.com/FelixSiegel/python-discord-rpc/actions/workflows/lint.yml/badge.svg)
 
-A complete [discord rich presence](https://discord.com/developers/docs/topics/rpc) wrapper fully written in python.
+A fully typed [discord rich presence](https://discord.com/developers/docs/topics/rpc) wrapper written in python.
