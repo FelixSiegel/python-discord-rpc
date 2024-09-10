@@ -1,12 +1,9 @@
-name: Type Check (mypy)
+name: Type Check (Mypy)
 
 on:
-  push:
-    paths:
-      - '*.py'
   pull_request:
-    paths:
-      - '*.py'
+    branches:
+      - main
   workflow_dispatch:
 
 jobs:
