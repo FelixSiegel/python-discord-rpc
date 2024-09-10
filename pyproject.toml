@@ -1,0 +1,42 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "pythonrpc"
+version = "0.0.1"
+description = "A fully typed discord rich presence wrapper written in python."
+readme = "README.md"
+license = { file = "LICENSE" }
+keywords = ["discord", "rpc", "rich", "presence", "ipc", "wrapper", "chat"]
+requires-python = ">=3.8"
+dependencies = ["typing-extensions"]
+authors = [{ name = "InfinityCoding", email = "infinitycoding@web.de" }]
+maintainers = [{ name = "InfinityCoding", email = "infinitycoding@web.de" }]
+classifiers = [
+    # Full list: https://pypi.org/classifiers/
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Development Status :: 3 - Alpha",
+    "Typing :: Typed",
+
+    'Intended Audience :: Developers',
+    'Topic :: Software Development :: Libraries',
+    'Topic :: Communications :: Chat',
+
+    'Programming Language :: Python',
+    'Programming Language :: Python :: 3.8',
+    'Programming Language :: Python :: 3.9',
+    'Programming Language :: Python :: 3.10',
+    'Programming Language :: Python :: 3.11',
+    'Programming Language :: Python :: 3 :: Only',
+]
+
+
+[project.urls]
+"Homepage" = "https://github.com/FelixSiegel/pythonRPC"
+"Source Code" = "https://github.com/FelixSiegel/pythonRPC"
+"Bug Tracker" = "https://github.com/FelixSiegel/pythonRPC/issues"
+
+[tool.setuptools.packages.find]
+where = ["pythonrpc"]
