@@ -106,11 +106,3 @@ int BaseConnection_Read(BaseConnection *self, void *data, size_t length) {
     }
     return res == (int)length;
 }
-
-int main() {
-    BaseConnection *conn = BaseConnection_Create();
-    BaseConnection_Open(conn);
-    BaseConnection_Write(conn, "Hello, World!", 13);
-    BaseConnection_Destroy(&conn);
-    return 0;
-}

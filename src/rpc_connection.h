@@ -1,59 +1,68 @@
-#pragma once
+#ifndef RPC_CONNECTION_H
+#define RPC_CONNECTION_H
 
 #include "connection.h"
 #include "serialization.h"
 
+#include <stdbool.h>
+
 // I took this from the buffer size libuv uses for named pipes; I suspect ours would usually be much
 // smaller.
-constexpr size_t MaxRpcFrameSize = 64 * 1024;
+#define MaxRpcFrameSize (64 * 1024)
 
-struct RpcConnection {
-    enum class ErrorCode : int {
-        Success = 0,
-        PipeClosed = 1,
-        ReadCorrupt = 2,
-    };
+typedef void (*OnConnectCallback)(JsonDocument *message);
+typedef void (*OnDisconnectCallback)(int errorCode, const char *message);
 
-    enum class Opcode : uint32_t {
-        Handshake = 0,
-        Frame = 1,
-        Close = 2,
-        Ping = 3,
-        Pong = 4,
-    };
+typedef enum {
+    ErrorCode_Success = 0,
+    ErrorCode_PipeClosed = 1,
+    ErrorCode_ReadCorrupt = 2,
+} ErrorCode;
 
-    struct MessageFrameHeader {
-        Opcode opcode;
-        uint32_t length;
-    };
+typedef enum {
+    Opcode_Handshake = 0,
+    Opcode_Frame = 1,
+    Opcode_Close = 2,
+    Opcode_Ping = 3,
+    Opcode_Pong = 4,
+} Opcode;
 
-    struct MessageFrame : public MessageFrameHeader {
-        char message[MaxRpcFrameSize - sizeof(MessageFrameHeader)];
-    };
+typedef struct {
+    Opcode opcode;
+    uint32_t length;
+} MessageFrameHeader;
 
-    enum class State : uint32_t {
-        Disconnected,
-        SentHandshake,
-        AwaitingResponse,
-        Connected,
-    };
+typedef struct {
+    MessageFrameHeader header;
+    char message[MaxRpcFrameSize - sizeof(MessageFrameHeader)];
+} MessageFrame;
 
-    BaseConnection* connection{nullptr};
-    State state{State::Disconnected};
-    void (*onConnect)(JsonDocument& message){nullptr};
-    void (*onDisconnect)(int errorCode, const char* message){nullptr};
-    char appId[64]{};
-    int lastErrorCode{0};
-    char lastErrorMessage[256]{};
-    RpcConnection::MessageFrame sendFrame;
+typedef enum {
+    State_Disconnected,
+    State_SentHandshake,
+    State_AwaitingResponse,
+    State_Connected,
+} State;
 
-    static RpcConnection* Create(const char* applicationId);
-    static void Destroy(RpcConnection*&);
+typedef struct {
+    BaseConnection *connection;
+    State state;
+    OnConnectCallback onConnect;
+    OnDisconnectCallback onDisconnect;
+    char appId[64];
+    int lastErrorCode;
+    char lastErrorMessage[256];
+    MessageFrame sendFrame;
+} RpcConnection;
 
-    inline bool IsOpen() const { return state == State::Connected; }
+RpcConnection *RpcConnection_Create(const char *applicationId);
+void RpcConnection_Destroy(RpcConnection **c);
 
-    void Open();
-    void Close();
-    bool Write(const void* data, size_t length);
-    bool Read(JsonDocument& message);
-};
+bool RpcConnection_IsOpen(const RpcConnection *self);
+
+void RpcConnection_Open(RpcConnection *self);
+void RpcConnection_Close(RpcConnection *self);
+bool RpcConnection_Write(RpcConnection *self, const void *data, size_t length);
+bool RpcConnection_Read(RpcConnection *self, JsonDocument *message);
+
+#endif // RPC_CONNECTION_H

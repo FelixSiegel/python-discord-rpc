@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <stdlib.h>
 
-// not really connectiony, but need per-platform
 int GetProcessId();
 
 typedef struct {

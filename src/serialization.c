@@ -1,7 +1,21 @@
+#include "serialization.h"
 #include "cJSON.h"
 #include "discord_rpc.h"
 #include <stdlib.h>
 #include <string.h>
+
+size_t StringCopy(char *dest, size_t len, const char *src) {
+    if (!src || !len) {
+        return 0;
+    }
+    size_t copied;
+    char *out = dest;
+    for (copied = 1; *src && copied < len; ++copied) {
+        *out++ = *src++;
+    }
+    *out = 0;
+    return copied - 1;
+}
 
 void NumberToString(char *dest, int64_t number) {
     if (!number) {
@@ -129,4 +143,60 @@ size_t JsonWriteRichPresenceObj(char *dest, size_t maxLen, int nonce, int pid, c
     cJSON_Delete(root);
 
     return size;
+}
+
+size_t JsonWriteHandshakeObj(char *dest, size_t maxLen, int version, const char *applicationId) {
+    cJSON *root = cJSON_CreateObject();
+
+    cJSON_AddNumberToObject(root, "v", version);
+    cJSON_AddStringToObject(root, "client_id", applicationId);
+
+    char *out = cJSON_PrintUnformatted(root);
+    strncpy(dest, out, maxLen);
+
+    size_t size = strlen(out);
+
+    free(out);
+    cJSON_Delete(root);
+
+    return size;
+}
+
+void JsonDocument_Init(JsonDocument *doc) {
+    doc->root = NULL;
+    memset(doc->parseBuffer, 0, sizeof(doc->parseBuffer));
+}
+
+void JsonDocument_Parse(JsonDocument *doc, const char *json) {
+    if (doc->root) {
+        cJSON_Delete(doc->root);
+    }
+    doc->root = cJSON_Parse(json);
+}
+
+void JsonDocument_Delete(JsonDocument *doc) {
+    if (doc->root) {
+        cJSON_Delete(doc->root);
+        doc->root = NULL;
+    }
+}
+
+const char* GetStrMember(const JsonDocument *doc, const char *name) {
+    if (doc->root) {
+        cJSON *item = cJSON_GetObjectItem(doc->root, name);
+        if (cJSON_IsString(item)) {
+            return item->valuestring;
+        }
+    }
+    return NULL;
+}
+
+int GetIntMember(const JsonDocument *doc, const char *name) {
+    if (doc->root) {
+        cJSON *item = cJSON_GetObjectItem(doc->root, name);
+        if (cJSON_IsNumber(item)) {
+            return item->valueint;
+        }
+    }
+    return 0;
 }

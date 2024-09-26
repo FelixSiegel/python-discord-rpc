@@ -1,20 +1,22 @@
 CC=/usr/bin/gcc
 
 SRC=\
+cJSON.c \
 connection_unix.c \
 serialization.c \
-test_serialization.c \
+rpc_connection.c
 
-OBJ=$(SRC:.c=.o)
+TARGET=rpc_connection
+
+OBJS=$(SRC:.c=.o)
+
+all: $(TARGET)
+
+$(TARGET): $(OBJS)
+	$(CC) -o $@ $^
 
 %.o: %.c
 	$(CC) -c $< -o $@
 
-connection_unix: $(OBJ)
-	$(CC) $(OBJ) -o bin/$@
-
-test_serialization: test_serialization.c serialization.o
-	$(CC) test_serialization.c serialization.o -o bin/test_serialization
-
 clean:
-	rm -f $(OBJ) bin/*
+	rm -f $(OBJS) $(TARGET) bin/*
