@@ -23,6 +23,11 @@
 extern "C" {
 #endif
 
+typedef struct DiscordButton {
+    const char *label;
+    const char *url;
+} DiscordButton;
+
 typedef struct DiscordRichPresence {
     int8_t type;         /* 0 = playing, 1 = streaming, 2 = listening, 3 = watching,
                             4 = custom (requires emojiName), 5 = competing */
@@ -40,8 +45,7 @@ typedef struct DiscordRichPresence {
     const char *emojiName;      /* max 32 bytes */
     const char *emojiId;        /* max 32 bytes */
     int8_t emojiAnimated;       /* bool (0 is False) */
-    const char *buttonLabel;    /* max 32 bytes */
-    const char *buttonUrl;      /* max 512 bytes */
+    DiscordButton buttons[2];   /* max 2 buttons */
     const char *matchSecret;    /* max 128 bytes */
     const char *joinSecret;     /* max 128 bytes */
     const char *spectateSecret; /* max 128 bytes */
