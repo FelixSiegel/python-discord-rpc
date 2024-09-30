@@ -1,5 +1,4 @@
-#ifndef RPC_CONNECTION_H
-#define RPC_CONNECTION_H
+#pragma once
 
 #include "connection.h"
 #include "serialization.h"
@@ -64,5 +63,3 @@ void RpcConnection_Open(RpcConnection *self);
 void RpcConnection_Close(RpcConnection *self);
 bool RpcConnection_Write(RpcConnection *self, const void *data, size_t length);
 bool RpcConnection_Read(RpcConnection *self, JsonDocument *message);
-
-#endif // RPC_CONNECTION_H

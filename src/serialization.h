@@ -1,10 +1,9 @@
-#ifndef SERIALIZATION_H
-#define SERIALIZATION_H
+#pragma once
 
 #include "cJSON.h"
 #include "discord_rpc.h"
-#include <stdint.h>
 #include <stddef.h>
+#include <stdint.h>
 
 typedef struct {
     cJSON *root;
@@ -24,13 +23,11 @@ void cJSON_AddOptionalStringToObject(cJSON *object, const char *name, const char
 size_t JsonWriteRichPresenceObj(char *dest, size_t maxLen, int nonce, int pid, const DiscordRichPresence *presence);
 
 // Function to write a handshake JSON object
-size_t JsonWriteHandshakeObj(char* dest, size_t maxLen, int version, const char* applicationId);
+size_t JsonWriteHandshakeObj(char *dest, size_t maxLen, int version, const char *applicationId);
 
 void JsonDocument_Init(JsonDocument *doc);
 void JsonDocument_Parse(JsonDocument *doc, const char *json);
 void JsonDocument_Delete(JsonDocument *doc);
 
-const char* GetStrMember(const JsonDocument *doc, const char *name);
+const char *GetStrMember(const JsonDocument *doc, const char *name);
 int GetIntMember(const JsonDocument *doc, const char *name);
-
-#endif // SERIALIZATION_H

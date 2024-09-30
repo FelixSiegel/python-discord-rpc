@@ -100,8 +100,7 @@ size_t JsonWriteRichPresenceObj(char *dest, size_t maxLen, int nonce, int pid, c
             cJSON_AddItemToObject(activity, "party", party);
         }
 
-        if ((presence->matchSecret && presence->matchSecret[0]) ||
-            (presence->joinSecret && presence->joinSecret[0]) ||
+        if ((presence->matchSecret && presence->matchSecret[0]) || (presence->joinSecret && presence->joinSecret[0]) ||
             (presence->spectateSecret && presence->spectateSecret[0])) {
             cJSON *secrets = cJSON_CreateObject();
             cJSON_AddOptionalStringToObject(secrets, "match", presence->matchSecret);
@@ -110,8 +109,7 @@ size_t JsonWriteRichPresenceObj(char *dest, size_t maxLen, int nonce, int pid, c
             cJSON_AddItemToObject(activity, "secrets", secrets);
         }
 
-        if ((presence->emojiName && presence->emojiName[0]) ||
-            (presence->emojiId && presence->emojiId[0])) {
+        if ((presence->emojiName && presence->emojiName[0]) || (presence->emojiId && presence->emojiId[0])) {
             cJSON *emoji = cJSON_CreateObject();
             cJSON_AddOptionalStringToObject(emoji, "name", presence->emojiName);
             cJSON_AddOptionalStringToObject(emoji, "id", presence->emojiId);
@@ -119,12 +117,17 @@ size_t JsonWriteRichPresenceObj(char *dest, size_t maxLen, int nonce, int pid, c
             cJSON_AddItemToObject(activity, "emoji", emoji);
         }
 
-        if ((presence->buttonLabel && presence->buttonLabel[0]) &&
-            (presence->buttonUrl && presence->buttonUrl[0])) {
-            cJSON *button = cJSON_CreateObject();
-            cJSON_AddStringToObject(button, "label", presence->buttonLabel);
-            cJSON_AddStringToObject(button, "url", presence->buttonUrl);
-            cJSON_AddItemToObject(activity, "button", button);
+        if (presence->buttons[0].label && presence->buttons[0].label[0]) {
+            cJSON *buttons = cJSON_CreateArray();
+            for (int i = 0; i < 2; ++i) {
+                if (presence->buttons[i].label && presence->buttons[i].label[0]) {
+                    cJSON *button = cJSON_CreateObject();
+                    cJSON_AddStringToObject(button, "label", presence->buttons[i].label);
+                    cJSON_AddStringToObject(button, "url", presence->buttons[i].url);
+                    cJSON_AddItemToArray(buttons, button);
+                }
+            }
+            cJSON_AddItemToObject(activity, "buttons", buttons);
         }
 
         cJSON_AddBoolToObject(activity, "instance", presence->instance);
@@ -181,7 +184,7 @@ void JsonDocument_Delete(JsonDocument *doc) {
     }
 }
 
-const char* GetStrMember(const JsonDocument *doc, const char *name) {
+const char *GetStrMember(const JsonDocument *doc, const char *name) {
     if (doc->root) {
         cJSON *item = cJSON_GetObjectItem(doc->root, name);
         if (cJSON_IsString(item)) {

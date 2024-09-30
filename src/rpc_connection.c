@@ -150,5 +150,4 @@ int main() {
     char buffer[4096];
     size_t length = JsonWriteRichPresenceObj(buffer, sizeof(buffer), 0, GetProcessId(), &presence);
     RpcConnection_Write(conn, buffer, length);
-
 }
