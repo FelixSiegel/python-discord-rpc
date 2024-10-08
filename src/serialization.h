@@ -28,6 +28,7 @@ size_t JsonWriteHandshakeObj(char *dest, size_t maxLen, int version, const char 
 void JsonDocument_Init(JsonDocument *doc);
 void JsonDocument_Parse(JsonDocument *doc, const char *json);
 void JsonDocument_Delete(JsonDocument *doc);
+const char *JsonDocument_Serialize(const JsonDocument *doc);
 
 const char *GetStrMember(const JsonDocument *doc, const char *name);
 int GetIntMember(const JsonDocument *doc, const char *name);

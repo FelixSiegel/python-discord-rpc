@@ -3,8 +3,6 @@
 #include "connection.h"
 #include "serialization.h"
 
-#include <stdbool.h>
-
 // I took this from the buffer size libuv uses for named pipes; I suspect ours would usually be much
 // smaller.
 #define MaxRpcFrameSize (64 * 1024)
@@ -55,11 +53,9 @@ typedef struct {
 } RpcConnection;
 
 RpcConnection *RpcConnection_Create(const char *applicationId);
-void RpcConnection_Destroy(RpcConnection **c);
-
-bool RpcConnection_IsOpen(const RpcConnection *self);
-
 void RpcConnection_Open(RpcConnection *self);
 void RpcConnection_Close(RpcConnection *self);
-bool RpcConnection_Write(RpcConnection *self, const void *data, size_t length);
-bool RpcConnection_Read(RpcConnection *self, JsonDocument *message);
+void RpcConnection_Destroy(RpcConnection **c);
+int RpcConnection_IsOpen(const RpcConnection *self);
+int RpcConnection_Write(RpcConnection *self, const void *data, size_t length);
+int RpcConnection_Read(RpcConnection *self, JsonDocument *message);

@@ -185,6 +185,14 @@ void JsonDocument_Delete(JsonDocument *doc) {
     }
 }
 
+const char *JsonDocument_Serialize(const JsonDocument *doc) {
+    if (doc->root) {
+        char *out = cJSON_PrintUnformatted(doc->root);
+        return out;
+    }
+    return NULL;
+}
+
 const char *GetStrMember(const JsonDocument *doc, const char *name) {
     if (doc->root) {
         cJSON *item = cJSON_GetObjectItem(doc->root, name);

@@ -97,7 +97,9 @@ int BaseConnection_Read(BaseConnection *self, void *data, size_t length) {
 
     int res = (int)recv(self->sock, data, length, MsgFlags);
     if (res < 0) {
+        // error occured
         if (errno == EAGAIN) {
+            // there is no data available right now, try again later
             return 0;
         }
         BaseConnection_Close(self);
