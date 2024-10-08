@@ -6,17 +6,21 @@ connection_unix.c \
 serialization.c \
 rpc_connection.c
 
-TARGET=rpc_connection
+TARGET=bin/rpc_connection
 
 OBJS=$(SRC:.c=.o)
+OBJS := $(addprefix bin/, $(OBJS))
 
 all: $(TARGET)
 
 $(TARGET): $(OBJS)
 	$(CC) -o $@ $^
 
-%.o: %.c
+bin/%.o: %.c
 	$(CC) -c $< -o $@
 
 clean:
-	rm -f $(OBJS) $(TARGET) bin/*
+	rm -f $(OBJS) $(TARGET)
+
+run: all
+	./$(TARGET)

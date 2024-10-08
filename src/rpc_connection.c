@@ -1,4 +1,5 @@
 #include "rpc_connection.h"
+#include "discord_rpc.h"
 #include "serialization.h"
 #include <stdbool.h>
 #include <stdio.h>
@@ -145,6 +146,14 @@ int main() {
     presence.state = "Playing";
     presence.details = "In a game";
     presence.startTimestamp = 1507665886;
+
+    // add button
+    DiscordButton buttons[2];
+    memset(buttons, 0, sizeof(buttons));
+    buttons[0].label = "Button 1";
+    buttons[0].url = "https://example.com";
+
+    presence.buttons[0] = buttons[0];
 
     // Write the rich presence object to the connection
     char buffer[4096];

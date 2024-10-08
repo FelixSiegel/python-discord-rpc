@@ -1,6 +1,7 @@
 #include "serialization.h"
 #include "cJSON.h"
 #include "discord_rpc.h"
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
